@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login - StreamBase{% endblock %}
+
+{% block content %}
+<div class="admin-login">
+    <div class="login-card">
+        <h1>Admin Login</h1>
+        
+        <form method="POST" action="{{ url_for('admin_login_post') }}">
+            <div class="form-group">
+                <label for="email">Admin Email:</label>
+                <input type="email" id="email" name="email" required 
+                       placeholder="Enter admin email">
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+        
+        <div class="login-help">
+            <p>Use the admin email to access the dashboard</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

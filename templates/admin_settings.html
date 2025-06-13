@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Settings - StreamBase{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <h1>Admin Settings</h1>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+</div>
+
+<div class="admin-content">
+    <form method="POST" action="{{ url_for('admin_settings_save') }}" class="service-form">
+        <div class="form-section">
+            <h3>Field Placeholders</h3>
+            <p>Customize the labels for account fields displayed to users.</p>
+            
+            <div class="form-group">
+                <label for="placeholder_user">User Field Label:</label>
+                <input type="text" id="placeholder_user" name="placeholder_user" 
+                       value="{{ settings.placeholders.user if settings and settings.placeholders else 'User' }}"
+                       placeholder="User">
+            </div>
+            
+            <div class="form-group">
+                <label for="placeholder_pass">Password Field Label:</label>
+                <input type="text" id="placeholder_pass" name="placeholder_pass" 
+                       value="{{ settings.placeholders.pass if settings and settings.placeholders else 'Pass' }}"
+                       placeholder="Pass">
+            </div>
+            
+            <div class="form-group">
+                <label for="placeholder_expiry">Expiry Field Label:</label>
+                <input type="text" id="placeholder_expiry" name="placeholder_expiry" 
+                       value="{{ settings.placeholders.expiry if settings and settings.placeholders else 'Expiry' }}"
+                       placeholder="Expiry">
+            </div>
+            
+            <div class="form-group">
+                <label for="placeholder_additional">Additional Field Label:</label>
+                <input type="text" id="placeholder_additional" name="placeholder_additional" 
+                       value="{{ settings.placeholders.additional if settings and settings.placeholders else 'Additional' }}"
+                       placeholder="Additional">
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save Settings
+            </button>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}{{ service.name }} - StreamBase{% endblock %}
+
+{% block content %}
+<div class="service-header">
+    <a href="{{ url_for('index') }}" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Back to Services
+    </a>
+    
+    <div class="service-title">
+        <div class="service-icon-large">
+            {% if service.icon_url %}
+                <img src="{{ service.icon_url }}" alt="{{ service.name }}" class="custom-icon">
+            {% elif service.icon_class %}
+                <i class="{{ service.icon_class }}" style="{% if service.color %}color: {{ service.color }};{% endif %}"></i>
+            {% else %}
+                <i class="fas fa-tv" style="color: #6c757d;"></i>
+            {% endif %}
+        </div>
+        <h1>{{ service.name }}</h1>
+    </div>
+</div>
+
+{% if service.comments %}
+<div class="service-comments">
+    <p>{{ service.comments }}</p>
+</div>
+{% endif %}
+
+{% if service.accounts %}
+<div class="accounts-container">
+    <h2>Available {{ 'Cookies' if service.account_type == 'cookies' else 'Accounts' }}</h2>
+    
+    {% for account in service.accounts %}
+    <div class="account-card">
+        {% if account.type == 'cookies' %}
+            <div class="account-field">
+                <label>Cookie Data:</label>
+                <div class="account-value">
+                    <textarea readonly onclick="this.select()">{{ account.data }}</textarea>
+                </div>
+            </div>
+        {% else %}
+            {% if account.user %}
+            <div class="account-field">
+                <label>{{ placeholders.get('user', 'User') }}:</label>
+                <div class="account-value">
+                    <input type="text" readonly onclick="this.select()" value="{{ account.user }}">
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if account.pass %}
+            <div class="account-field">
+                <label>{{ placeholders.get('pass', 'Pass') }}:</label>
+                <div class="account-value">
+                    <input type="text" readonly onclick="this.select()" value="{{ account.pass }}">
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if account.expiry %}
+            <div class="account-field">
+                <label>{{ placeholders.get('expiry', 'Expiry') }}:</label>
+                <div class="account-value">
+                    <input type="text" readonly onclick="this.select()" value="{{ account.expiry }}">
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if account.additional %}
+            <div class="account-field">
+                <label>{{ placeholders.get('additional', 'Additional') }}:</label>
+                <div class="account-value">
+                    <input type="text" readonly onclick="this.select()" value="{{ account.additional }}">
+                </div>
+            </div>
+            {% endif %}
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="no-accounts">
+    <i class="fas fa-user-slash"></i>
+    <h2>No accounts available</h2>
+    <p>Check back later for new accounts!</p>
+</div>
+{% endif %}
+{% endblock %}

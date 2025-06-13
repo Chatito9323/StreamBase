@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}StreamBase - Free OTT Accounts{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1 class="title">StreamBase</h1>
+    <p class="subtitle">Free OTT Accounts & Cookies</p>
+</div>
+
+{% if services %}
+<div class="services-grid">
+    {% for service in services %}
+    <div class="service-card" onclick="location.href='{{ url_for('service_detail', service_id=service.id) }}'">
+        <div class="service-icon">
+            {% if service.icon_url %}
+                <img src="{{ service.icon_url }}" alt="{{ service.name }}" class="custom-icon">
+            {% elif service.icon_class %}
+                <i class="{{ service.icon_class }}" style="{% if service.color %}color: {{ service.color }};{% endif %}"></i>
+            {% else %}
+                <i class="fas fa-tv" style="color: #6c757d;"></i>
+            {% endif %}
+        </div>
+        <div class="service-name">{{ service.name }}</div>
+        <div class="account-count">{{ service.accounts|length if service.accounts else 0 }} accounts</div>
+        {% if service.has_new_accounts %}
+        <div class="new-badge">New Accounts!</div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="no-services">
+    <i class="fas fa-tv no-services-icon"></i>
+    <h2>No OTT services available</h2>
+    <p>Check back later for new services!</p>
+</div>
+{% endif %}
+{% endblock %}

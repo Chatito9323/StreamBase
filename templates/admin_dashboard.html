@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - StreamBase{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <h1>Admin Dashboard</h1>
+    <div class="admin-actions">
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">
+            <i class="fas fa-home"></i> View Site
+       
+        <a href="{{ url_for('admin_logout') }}" class="btn btn-danger">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+</div>
+
+<div class="admin-content">
+    <div class="section-header">
+        <h2>Services</h2>
+        <a href="{{ url_for('admin_service_new') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Service
+        </a>
+    </div>
+    
+    {% if services %}
+    <div class="admin-services">
+        {% for service in services %}
+        <div class="admin-service-card">
+            <div class="service-info">
+                <div class="service-icon">
+                    {% if service.icon_url %}
+                        <img src="{{ service.icon_url }}" alt="{{ service.name }}" class="custom-icon">
+                    {% elif service.icon_class %}
+                        <i class="{{ service.icon_class }}" style="{% if service.color %}color: {{ service.color }};{% endif %}"></i>
+                    {% else %}
+                        <i class="fas fa-tv" style="color: #6c757d;"></i>
+                    {% endif %}
+                </div>
+                <div class="service-details">
+                    <h3>{{ service.name }}</h3>
+                    <p>{{ service.accounts|length }} account(s)</p>
+                    <p>Type: {{ service.account_type.title() }}</p>
+                    {% if service.has_new_accounts %}
+                    <span class="new-badge">New Accounts!</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="service-actions">
+                <a href="{{ url_for('admin_service_edit', service_id=service.id) }}" 
+                   class="btn btn-sm btn-secondary">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a href="{{ url_for('admin_service_settings', service_id=service.id) }}" 
+                   class="btn btn-sm btn-primary">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+                <form method="POST" action="{{ url_for('admin_service_delete', service_id=service.id) }}" 
+                      style="display: inline;" 
+                      onsubmit="return confirm('Are you sure you want to delete this service?')">
+                    <button type="submit" class="btn btn-sm btn-danger">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-services">
+        <i class="fas fa-tv"></i>
+        <h3>No services added yet</h3>
+        <p>Click "Add Service" to create your first service.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

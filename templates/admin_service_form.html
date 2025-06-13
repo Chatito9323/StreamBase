@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}{% if service %}Edit Service{% else %}Add Service{% endif %} - StreamBase{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <h1>{% if service %}Edit Service{% else %}Add Service{% endif %}</h1>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+</div>
+
+<div class="admin-content">
+    <form method="POST" action="{{ url_for('admin_service_save') }}" enctype="multipart/form-data" class="service-form">
+        {% if service %}
+        <input type="hidden" name="service_id" value="{{ service.id }}">
+        {% endif %}
+        
+        <div class="form-section">
+            <h3>Service Information</h3>
+            
+            <div class="form-group">
+                <label for="name">Service Name:</label>
+                <input type="text" id="name" name="name" required 
+                       value="{{ service.name if service else '' }}"
+                       placeholder="Netflix, Prime Video, etc.">
+            </div>
+            
+            <div class="form-group">
+                <label for="color">Color (optional):</label>
+                <input type="color" id="color" name="color" 
+                       value="{{ service.color if service and service.color else '#6c757d' }}">
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>Icon Settings</h3>
+            
+            <div class="icon-options">
+                <div class="form-group">
+                    <label for="icon_class">Font Awesome Icon Class (optional):</label>
+                    <input type="text" id="icon_class" name="icon_class" 
+                           value="{{ service.icon_class if service else '' }}"
+                           placeholder="fab fa-netflix, fas fa-play, etc.">
+                    <small>Or upload a custom icon below</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="icon_file">Custom Icon (PNG/JPG/SVG):</label>
+                    <input type="file" id="icon_file" name="icon_file" 
+                           accept=".png,.jpg,.jpeg,.gif,.svg">
+                    {% if service and service.icon_url %}
+                    <div class="current-icon">
+                        <p>Current custom icon:</p>
+                        <img src="{{ service.icon_url }}" alt="Current icon" class="icon-preview">
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>Account Settings</h3>
+            
+            <div class="form-group">
+                <label for="account_type">Account Type:</label>
+                <select id="account_type" name="account_type" onchange="updateAccountTypeHelp()">
+                    <option value="credentials" {% if not service or service.account_type == 'credentials' %}selected{% endif %}>
+                        Credentials (Username/Password)
+                    </option>
+                    <option value="cookies" {% if service and service.account_type == 'cookies' %}selected{% endif %}>
+                        Cookies
+                    </option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="accounts">Accounts (Required):</label>
+                <textarea id="accounts" name="accounts" rows="10" required 
+                          placeholder="Enter accounts here...">{% if service and service.accounts %}{% for account in service.accounts %}{% if account.type == 'cookies' %}{{ account.data }}{% else %}{% if account.user %}{{ account.user }}{% endif %}{% if account.pass %}|{{ account.pass }}{% endif %}{% if account.expiry %}|{{ account.expiry }}{% endif %}{% if account.additional %}|{{ account.additional }}{% endif %}{% endif %}{% if not loop.last %}
+{% endif %}{% endfor %}{% endif %}</textarea>
+                <div id="account-help" class="form-help">
+                    <p><strong>Format for Credentials:</strong></p>
+                    <p>user|pass|expiry|additional (each field is optional except user)</p>
+                    <p>Or use: email:password format</p>
+                    <p>Example: john@email.com|password123|2024-12-31|Premium</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>Additional Information</h3>
+            
+            <div class="form-group">
+                <label for="comments">Comments (optional):</label>
+                <textarea id="comments" name="comments" rows="3" 
+                          placeholder="Any additional information about this service...">{{ service.comments if service else '' }}</textarea>
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save Service
+            </button>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+function updateAccountTypeHelp() {
+    const accountType = document.getElementById('account_type').value;
+    const helpDiv = document.getElementById('account-help');
+    const accountsTextarea = document.getElementById('accounts');
+    
+    if (accountType === 'cookies') {
+        helpDiv.innerHTML = `
+            <p><strong>Format for Cookies:</strong></p>
+            <p>Paste the complete cookie string for each account on a new line</p>
+            <p>Example: session_id=abc123; user_token=xyz789; expires=...</p>
+        `;
+        accountsTextarea.placeholder = 'Enter cookie strings here, one per line...';
+    } else {
+        helpDiv.innerHTML = `
+            <p><strong>Format for Credentials:</strong></p>
+            <p>user|pass|expiry|additional (each field is optional except user)</p>
+            <p>Or use: email:password format</p>
+            <p>Example: john@email.com|password123|2024-12-31|Premium</p>
+        `;
+        accountsTextarea.placeholder = 'Enter accounts here...';
+    }
+}
+
+// Initialize help text
+document.addEventListener('DOMContentLoaded', function() {
+    updateAccountTypeHelp();
+});
+</script>
+{% endblock %}
+
+
