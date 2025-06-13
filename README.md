@@ -201,6 +201,7 @@ streambase/
 
 ## Contact
 -- Discord : @heisenburger_7
+-- Kiny send me message if you encounter any bugs or any problems
 
 ## Contributing
 
