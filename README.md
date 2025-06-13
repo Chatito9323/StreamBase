@@ -31,7 +31,8 @@ A modern web application for managing and distributing OTT (Over-The-Top) stream
 - Supabase account and project
 - Modern web browser
 
--- All credit goes to Replit and ChatGPT😓
+## Credits
+-- All credit goes to Replit and ChatGPT😅
 
 ## Installation
 
@@ -198,7 +199,7 @@ streambase/
 - Safari 13+
 - Edge 80+
 
-## Find Me On
+## Contact
 -- Discord : @heisenburger_7
 
 ## Contributing
